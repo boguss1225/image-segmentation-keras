@@ -6,12 +6,16 @@ model_from_name = {}
 
 
 model_from_name["fcn_8"] = fcn.fcn_8
+model_from_name["fcn_16"] = fcn.fcn_16
 model_from_name["fcn_32"] = fcn.fcn_32
 model_from_name["fcn_8_vgg"] = fcn.fcn_8_vgg
+model_from_name["fcn_16_vgg"] = fcn.fcn_16_vgg
 model_from_name["fcn_32_vgg"] = fcn.fcn_32_vgg
 model_from_name["fcn_8_resnet50"] = fcn.fcn_8_resnet50
+model_from_name["fcn_16_resnet50"] = fcn.fcn_16_resnet50
 model_from_name["fcn_32_resnet50"] = fcn.fcn_32_resnet50
 model_from_name["fcn_8_mobilenet"] = fcn.fcn_8_mobilenet
+model_from_name["fcn_16_mobilenet"] = fcn.fcn_16_mobilenet
 model_from_name["fcn_32_mobilenet"] = fcn.fcn_32_mobilenet
 
 

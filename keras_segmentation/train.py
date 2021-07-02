@@ -9,6 +9,8 @@ from tensorflow.keras.callbacks import ModelCheckpoint
 import tensorflow as tf
 import glob
 import sys
+from keras_segmentation.metrics import dice_coef
+
 
 def find_latest_checkpoint(checkpoints_path, fail_safe=True):
 
@@ -53,9 +55,9 @@ class CheckpointsCallback(Callback):
 
     def on_epoch_end(self, epoch, logs=None):
         if self.checkpoints_path is not None:
-            self.model.save_weights(self.checkpoints_path + "." + str(epoch))
+            #self.model.save_weights(self.checkpoints_path + "." + str(epoch)) # If you want to save all epoch checkpoint
+            self.model.save_weights(self.checkpoints_path) # If you want to save only the last epoch checkpoint
             print("saved ", self.checkpoints_path + "." + str(epoch))
-
 
 def train(model,
           train_images,
@@ -118,7 +120,17 @@ def train(model,
 
         model.compile(loss=loss_k,
                       optimizer=optimizer_name,
-                      metrics=['accuracy'])
+                      metrics=['accuracy',
+                                tf.keras.metrics.Recall(),
+                                tf.keras.metrics.Precision(),
+                                tf.keras.metrics.AUC(),
+                                tf.keras.metrics.MeanIoU(num_classes=n_classes),
+                                dice_coef,
+                                tf.keras.metrics.TruePositives(),
+                                tf.keras.metrics.TrueNegatives(),
+                                tf.keras.metrics.FalsePositives(),
+                                tf.keras.metrics.FalseNegatives()
+                                ])
 
     if checkpoints_path is not None:
         config_file = checkpoints_path + "_config.json"
@@ -134,7 +146,10 @@ def train(model,
                 "input_height": input_height,
                 "input_width": input_width,
                 "output_height": output_height,
-                "output_width": output_width
+                "output_width": output_width,
+                "batch_size": batch_size,
+                "epochs": epochs,
+                "steps_per_epoch": steps_per_epoch
             }, f)
 
     if load_weights is not None and len(load_weights) > 0:
@@ -181,7 +196,8 @@ def train(model,
 
     if callbacks is None and (not checkpoints_path is  None) :
         default_callback = ModelCheckpoint(
-                filepath=checkpoints_path + ".{epoch:05d}",
+                #filepath=checkpoints_path + ".{epoch:05d}",
+                filepath=checkpoints_path+"_HM",
                 save_weights_only=True,
                 verbose=True
             )
@@ -197,12 +213,14 @@ def train(model,
         callbacks = []
 
     if not validate:
-        model.fit(train_gen, steps_per_epoch=steps_per_epoch,
+        result = model.fit(train_gen, steps_per_epoch=steps_per_epoch,
                   epochs=epochs, callbacks=callbacks, initial_epoch=initial_epoch)
     else:
-        model.fit(train_gen,
+        result = model.fit(train_gen,
                   steps_per_epoch=steps_per_epoch,
                   validation_data=val_gen,
                   validation_steps=val_steps_per_epoch,
                   epochs=epochs, callbacks=callbacks,
-                  use_multiprocessing=gen_use_multiprocessing, initial_epoch=initial_epoch)
+                  use_multiprocessing=gen_use_multiprocessing, 
+                  initial_epoch=initial_epoch)
+    return result

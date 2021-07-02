@@ -93,6 +93,43 @@ def fcn_8(n_classes, encoder=vanilla_encoder, input_height=416,
     return model
 
 
+def fcn_16(n_classes, encoder=vanilla_encoder, input_height=416,
+          input_width=608, channels=3):
+
+    img_input, levels = encoder(
+        input_height=input_height,  input_width=input_width, channels=channels)
+    [f1, f2, f3, f4, f5] = levels
+
+    o = f5
+
+    o = (Conv2D(4096, (7, 7), activation='relu',
+                padding='same', data_format=IMAGE_ORDERING))(o)
+    o = Dropout(0.5)(o)
+    o = (Conv2D(4096, (1, 1), activation='relu',
+                padding='same', data_format=IMAGE_ORDERING))(o)
+    o = Dropout(0.5)(o)
+
+    o = (Conv2D(n_classes,  (1, 1), kernel_initializer='he_normal',
+                data_format=IMAGE_ORDERING))(o)
+    o = Conv2DTranspose(n_classes, kernel_size=(2, 2),  strides=(
+        2, 2), use_bias=False, data_format=IMAGE_ORDERING)(o)
+
+    o2 = f4
+    o2 = (Conv2D(n_classes,  (1, 1), kernel_initializer='he_normal',
+                 data_format=IMAGE_ORDERING))(o2)
+
+    o, o2 = crop(o, o2, img_input)
+
+    o = Add()([o, o2])
+
+    o = Conv2DTranspose(n_classes, kernel_size=(32, 32),  strides=(
+        16, 16), use_bias=False, data_format=IMAGE_ORDERING)(o)
+
+    model = get_segmentation_model(img_input, o)
+    model.model_name = "fcn_16"
+    return model
+
+
 def fcn_32(n_classes, encoder=vanilla_encoder, input_height=416,
            input_width=608, channels=3):
 
@@ -126,6 +163,13 @@ def fcn_8_vgg(n_classes,  input_height=416, input_width=608, channels=3):
     return model
 
 
+def fcn_16_vgg(n_classes,  input_height=416, input_width=608, channels=3):
+    model = fcn_16(n_classes, get_vgg_encoder,
+                   input_height=input_height, input_width=input_width, channels=channels)
+    model.model_name = "fcn_16_vgg"
+    return model
+
+
 def fcn_32_vgg(n_classes,  input_height=416, input_width=608, channels=3):
     model = fcn_32(n_classes, get_vgg_encoder,
                    input_height=input_height, input_width=input_width, channels=channels)
@@ -137,6 +181,13 @@ def fcn_8_resnet50(n_classes,  input_height=416, input_width=608, channels=3):
     model = fcn_8(n_classes, get_resnet50_encoder,
                   input_height=input_height, input_width=input_width, channels=channels)
     model.model_name = "fcn_8_resnet50"
+    return model
+
+
+def fcn_16_resnet50(n_classes,  input_height=416, input_width=608, channels=3):
+    model = fcn_16(n_classes, get_resnet50_encoder,
+                  input_height=input_height, input_width=input_width, channels=channels)
+    model.model_name = "fcn_16_resnet50"
     return model
 
 
@@ -154,6 +205,13 @@ def fcn_8_mobilenet(n_classes,  input_height=224, input_width=224, channels=3):
     return model
 
 
+def fcn_16_mobilenet(n_classes,  input_height=224, input_width=224, channels=3):
+    model = fcn_16(n_classes, get_mobilenet_encoder,
+                  input_height=input_height, input_width=input_width, channels=channels)
+    model.model_name = "fcn_16_mobilenet"
+    return model
+
+
 def fcn_32_mobilenet(n_classes,  input_height=224, input_width=224, channels=3):
     model = fcn_32(n_classes, get_mobilenet_encoder,
                    input_height=input_height, input_width=input_width, channels=channels)
@@ -163,4 +221,5 @@ def fcn_32_mobilenet(n_classes,  input_height=224, input_width=224, channels=3):
 
 if __name__ == '__main__':
     m = fcn_8(101)
+    m = fcn_16(101)
     m = fcn_32(101)

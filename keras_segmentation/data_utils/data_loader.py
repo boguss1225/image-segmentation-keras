@@ -25,9 +25,21 @@ from .augmentation import augment_seg, custom_augment_seg
 DATA_LOADER_SEED = 0
 
 random.seed(DATA_LOADER_SEED)
-class_colors = [(random.randint(0, 255), random.randint(
-    0, 255), random.randint(0, 255)) for _ in range(5000)]
+#class_colors = [(random.randint(0, 255), random.randint(
+#    0, 255), random.randint(0, 255)) for _ in range(5000)]
 
+#HM - color for segmentation result
+class_colors = [[0, 0, 0], [0, 0, 125], [0, 125, 0], [125, 0, 0],
+                [0, 125, 125], [125, 0, 125], [125, 125, 0],
+                [125, 125, 62],[62, 125, 125],[125, 62, 125],
+                [30, 30, 62], [30, 62, 30], [130, 62, 130],
+                [62, 30, 30], [62, 30, 62], [62, 62, 30],
+                [30, 62, 62], [10, 125, 50], [125, 50, 10],
+                [70, 15, 125], [75, 110, 25], [25, 125, 50],
+                [30, 50, 25], [40, 85, 60], [125, 20, 110],
+                [255, 50, 60], [60, 255, 60], [60, 60, 255],
+                [255, 255, 125], [255, 125, 255], [125, 255, 255],
+                [255, 125, 125], [125, 255, 125], [125, 125, 255]]
 
 ACCEPTABLE_IMAGE_FORMATS = [".jpg", ".jpeg", ".png", ".bmp"]
 ACCEPTABLE_SEGMENTATION_FORMATS = [".png", ".bmp"]
@@ -199,9 +211,17 @@ def get_segmentation_array(image_input, nClasses,
 
     return seg_labels
 
+import glob
 
 def verify_segmentation_dataset(images_path, segs_path,
                                 n_classes, show_all_errors=False):
+    deletepath = os.path.join(images_path,"._*")
+    for filename in glob.glob(deletepath):
+        os.remove(filename) 
+    deletepath = os.path.join(segs_path,"._*")
+    for filename in glob.glob(deletepath):
+        os.remove(filename) 
+
     try:
         img_seg_pairs = get_pairs_from_paths(images_path, segs_path)
         if not len(img_seg_pairs):
