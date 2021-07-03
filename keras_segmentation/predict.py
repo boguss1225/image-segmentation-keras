@@ -25,7 +25,8 @@ def model_from_checkpoint_path(checkpoints_path):
             ), "Checkpoint not found."
     model_config = json.loads(
         open(checkpoints_path+"_config.json", "r").read())
-    latest_weights = find_latest_checkpoint(checkpoints_path)
+    latest_weights = find_latest_checkpoint(checkpoints_path) # if you saved all the checkpoints (train.py-line 59,200)
+    #latest_weights = checkpoints_path+".data-00001-of-00002"
     assert (latest_weights is not None), "Checkpoint not found."
     model = model_from_name[model_config['model_class']](
         model_config['n_classes'], input_height=model_config['input_height'],
@@ -202,7 +203,7 @@ def predict_multiple(model=None, inps=None, inp_dir=None, out_dir=None,
                 out_fname = os.path.join(out_dir, os.path.basename(inp))
             else:
                 out_fname = os.path.join(out_dir, str(i) + ".jpg")
-
+        
         pr = predict(model, inp, out_fname,
                      overlay_img=overlay_img, class_names=class_names,
                      show_legends=show_legends, colors=colors,

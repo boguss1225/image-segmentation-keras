@@ -39,12 +39,16 @@ Following models are supported:
 | model_name       | Base Model        | Segmentation Model |
 |------------------|-------------------|--------------------|
 | fcn_8            | Vanilla CNN       | FCN8               |
-| fcn_32           | Vanilla CNN       | FCN8               |
+| fcn_16           | Vanilla CNN       | FCN16              |
+| fcn_32           | Vanilla CNN       | FCN32              |
 | fcn_8_vgg        | VGG 16            | FCN8               |
+| fcn_16_vgg       | VGG 16            | FCN16              |
 | fcn_32_vgg       | VGG 16            | FCN32              |
-| fcn_8_resnet50   | Resnet-50         | FCN32              |
+| fcn_8_resnet50   | Resnet-50         | FCN8               |
+| fcn_16_resnet50  | Resnet-50         | FCN16              |
 | fcn_32_resnet50  | Resnet-50         | FCN32              |
-| fcn_8_mobilenet  | MobileNet         | FCN32              |
+| fcn_8_mobilenet  | MobileNet         | FCN8               |
+| fcn_16_mobilenet | MobileNet         | FCN16              |
 | fcn_32_mobilenet | MobileNet         | FCN32              |
 | pspnet           | Vanilla CNN       | PSPNet             |
 | vgg_pspnet       | VGG 16            | PSPNet             |
@@ -66,6 +70,19 @@ Input Image            |  Output Segmentation Image
 :-------------------------:|:-------------------------:
 ![](sample_images/1_input.jpg)  |  ![](sample_images/1_output.png)
 ![](sample_images/3_input.jpg)  |  ![](sample_images/3_output.png)
+
+## Mouse Brain Image
+
+This code is used to develop mouse brain atlas.
+5 models (FCN8, FCN16, FCN32, SegNet, UNet) are trained to determine the best suit model for mouse brain segmentation.
+
+Model| Input Image            |  Output Segmentation Image
+:------:|:---------------------------------------------------:|:-------------------------:
+FCN8    |![](database/foldset_test/test_images/0602.vsi.jpg)  |  ![](out_frame/FCN8_output.png)
+FCN16   |![](database/foldset_test/test_images/0701.vsi.jpg)  |  ![](out_frame/FCN16_output.png)
+FCN32   |![](database/foldset_test/test_images/0701.vsi.jpg)  |  ![](out_frame/FCN32_output.png)
+SegNet  |![](database/foldset_test/test_images/0701.vsi.jpg)  |  ![](out_frame/SegNet_output.png)
+UNet    |![](database/foldset_test/test_images/0701.vsi.jpg)  |  ![](out_frame/UNet_output.png)
 
 
 ## Getting Started

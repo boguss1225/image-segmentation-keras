@@ -17,7 +17,8 @@ def find_latest_checkpoint(checkpoints_path, fail_safe=True):
     # This is legacy code, there should always be a "checkpoint" file in your directory
 
     def get_epoch_number_from_path(path):
-        return path.replace(checkpoints_path, "").strip(".")
+        result = path.replace(checkpoints_path, "").strip(".")
+        return result
 
     # Get all matching files
     all_checkpoint_files = glob.glob(checkpoints_path + ".*")
@@ -40,7 +41,7 @@ def find_latest_checkpoint(checkpoints_path, fail_safe=True):
     latest_epoch_checkpoint = max(all_checkpoint_files,
                                   key=lambda f:
                                   int(get_epoch_number_from_path(f)))
-
+    
     return latest_epoch_checkpoint
 
 def masked_categorical_crossentropy(gt, pr):
@@ -55,8 +56,8 @@ class CheckpointsCallback(Callback):
 
     def on_epoch_end(self, epoch, logs=None):
         if self.checkpoints_path is not None:
-            #self.model.save_weights(self.checkpoints_path + "." + str(epoch)) # If you want to save all epoch checkpoint
-            self.model.save_weights(self.checkpoints_path) # If you want to save only the last epoch checkpoint
+            self.model.save_weights(self.checkpoints_path + "." + str(epoch)) # If you want to save all epoch checkpoint
+            #self.model.save_weights(self.checkpoints_path) # If you want to save only the last epoch checkpoint
             print("saved ", self.checkpoints_path + "." + str(epoch))
 
 def train(model,
@@ -196,8 +197,8 @@ def train(model,
 
     if callbacks is None and (not checkpoints_path is  None) :
         default_callback = ModelCheckpoint(
-                #filepath=checkpoints_path + ".{epoch:05d}",
-                filepath=checkpoints_path+"_HM",
+                # filepath=checkpoints_path + ".{epoch:05d}",# if you want to save all
+                filepath=checkpoints_path + "."+str(epochs).zfill(5),
                 save_weights_only=True,
                 verbose=True
             )
