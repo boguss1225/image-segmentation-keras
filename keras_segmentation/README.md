@@ -78,11 +78,19 @@ This code is used to develop mouse brain atlas.
 
 Model| Input Image            |  Output Segmentation Image
 :------:|:---------------------------------------------------:|:-------------------------:
+<<<<<<< HEAD
+FCN8    |![](../database/foldset_test/test_images/0408.vsi.jpg)  |  ![](../screenshots/FCN8_output.png)
+FCN16   |![](../database/foldset_test/test_images/0408.vsi.jpg)  |  ![](../screenshots/FCN16_output.png)
+FCN32   |![](../database/foldset_test/test_images/0408.vsi.jpg)  |  ![](../screenshots/FCN32_output.png)
+SegNet  |![](../database/foldset_test/test_images/0408.vsi.jpg)  |  ![](../screenshots/SegNet_output.png)
+UNet    |![](../database/foldset_test/test_images/0408.vsi.jpg)  |  ![](../screenshots/UNet_output.png)
+=======
 FCN8    |![](../database/foldset_test/test_images/0408.vsi.jpg)  |  ![](../out_frame/FCN8_output.png)
 FCN16   |![](../database/foldset_test/test_images/0408.vsi.jpg)  |  ![](../out_frame/FCN16_output.png)
 FCN32   |![](../database/foldset_test/test_images/0408.vsi.jpg)  |  ![](../out_frame/FCN32_output.png)
 SegNet  |![](../database/foldset_test/test_images/0408.vsi.jpg)  |  ![](../out_frame/SegNet_output.png)
 UNet    |![](../database/foldset_test/test_images/0408.vsi.jpg)  |  ![](../out_frame/UNet_output.png)
+>>>>>>> a935e9f5361500221fb6eb1568584f378c4ad2ca
 
 
 ## Getting Started
